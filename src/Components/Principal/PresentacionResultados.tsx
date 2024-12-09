@@ -1,12 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Image } from "react-bootstrap";
 import ModalCustom from "../shared/ModalCustom";
+import { ResponseGrades } from "../../Interfaces/ResponseGrades";
 
-function PresentacionResultados({results, breakpoint})
+interface PresentacionResultadosInterface{
+    results: ResponseGrades,
+    breakpoint: boolean
+}
+
+
+function PresentacionResultados({results, breakpoint}: PresentacionResultadosInterface)
 {
     const [src,setSrc] = useState("./src/assets/question.webp");
     const [message, setMessage] = useState("Ingresa tus datos para el calculo")
     const [modalShow, setModalShow] = useState(false);
+    const isFirstRender = useRef(true);
     let mensajeResultado = (
         <>
             <Image src={src} width={300} height={300} fluid/>
@@ -21,16 +29,20 @@ function PresentacionResultados({results, breakpoint})
         </>
     );
     useEffect(() => {
-        if (results.aprobado) {
-            setModalShow(true);
-            setSrc("./src/assets/approved.png");
-            setMessage("¡Felicidades, estás aprobado!");
-        } else {
-            setModalShow(true);
-            setSrc("./src/assets/sad.svg");
-            setMessage("¡Sigue intentándolo!");
+        if (isFirstRender.current) {
+            console.log(isFirstRender);
+            isFirstRender.current = false; // Marca como montado
+        }else{
+            if (results.aprobado) {
+                setModalShow(true);
+                setSrc("./src/assets/approved.png");
+                setMessage("¡Felicidades, estás aprobado!");
+            } else {
+                setModalShow(true);
+                setSrc("./src/assets/sad.svg");
+                setMessage("¡Sigue intentándolo!");
+            }
         }
-        console.log(breakpoint)
     }, [results]);
     return(
         <>

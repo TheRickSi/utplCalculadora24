@@ -3,7 +3,10 @@ import { useState } from "react";
 import { FormDataGrades } from "../../Interfaces/FormDataInterface";
 import { ResponseGrades } from "../../Interfaces/ResponseGrades";
 
-function FormularioNotas({onChange}) {
+interface FormularioNotasInterface{
+    onChange: (response: ResponseGrades)=> void;
+}
+function FormularioNotas({onChange}: FormularioNotasInterface) {
     // Estado para cada campo del formulario
     const [formData, setFormData] = useState<FormDataGrades>({
         ACBDB1: 0,
