@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Image } from "react-bootstrap";
 import ModalCustom from "../shared/ModalCustom";
 import { ResponseGrades } from "../../Interfaces/ResponseGrades";
@@ -14,7 +14,6 @@ function PresentacionResultados({results, breakpoint}: PresentacionResultadosInt
     const [src,setSrc] = useState("/assets/question.webp");
     const [message, setMessage] = useState("Ingresa tus datos para el calculo")
     const [modalShow, setModalShow] = useState(false);
-    const isFirstRender = useRef(true);
     let mensajeResultado = (
         <>
             <Image src={src} width={300} height={300} fluid/>
@@ -29,10 +28,7 @@ function PresentacionResultados({results, breakpoint}: PresentacionResultadosInt
         </>
     );
     useEffect(() => {
-        if (isFirstRender.current) {
-            console.log(isFirstRender);
-            isFirstRender.current = false; // Marca como montado
-        }else{
+
             if (results.aprobado) {
                 setModalShow(true);
                 setSrc("/assets/approved.png");
@@ -42,7 +38,6 @@ function PresentacionResultados({results, breakpoint}: PresentacionResultadosInt
                 setSrc("/assets/sad.svg");
                 setMessage("¡Sigue intentándolo!");
             }
-        }
     }, [results]);
     return(
         <>
