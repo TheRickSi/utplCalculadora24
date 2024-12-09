@@ -7,7 +7,7 @@ function NavBar(){
             <Navbar.Brand href="#home">
                 <img
                 alt=""
-                src="./src/assets/react.svg"
+                src="/assets/react.svg"
                 width="30"
                 height="30"
                 />{' '}
