@@ -3,9 +3,6 @@ import { useState } from "react";
 import { FormDataGrades } from "../../Interfaces/FormDataInterface";
 import { ResponseGrades } from "../../Interfaces/ResponseGrades";
 
-interface FormularioNotasProps {
-    onChange: (response: ResponseGrades) => void;
-}
 function FormularioNotas({onChange}) {
     // Estado para cada campo del formulario
     const [formData, setFormData] = useState<FormDataGrades>({
@@ -19,7 +16,7 @@ function FormularioNotas({onChange}) {
         AEPRB2: 0,
         examenRecuperacion: 0
     });
-
+    const [validated, setValidated] = useState(false);
     // Función para manejar el cambio de los inputs
     const handleChange = (e:any) => {
         const { name, value } = e.target;
@@ -32,39 +29,48 @@ function FormularioNotas({onChange}) {
     // Función para manejar el submit del formulario
     const handleSubmit = (e:any) => {
         e.preventDefault(); // Evitar el refresco de la página
-        var promedioP1 = formData.AAB01 + formData.ACBDB1 + formData.AEPRB1 + formData.APEB1;
-        var promedioP2 = formData.AAB02 + formData.ACBDB2 +formData.AEPRB2 + formData.APEB2;
-        console.log(promedioP1,promedioP2)
-        var promedioFinal = (promedioP1 + promedioP2 )/2;
-        const aprobado = promedioFinal>=7;
-        var response: ResponseGrades;
-        if(aprobado){
-             response = {
-                notaMin: 0,
-                promedioActual: promedioFinal,
-                aprobado: true
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.preventDefault();
+            e.stopPropagation();
+        }else{
+            
+            var promedioP1 = formData.AAB01 + formData.ACBDB1 + formData.AEPRB1 + formData.APEB1;
+            var promedioP2 = formData.AAB02 + formData.ACBDB2 +formData.AEPRB2 + formData.APEB2;
+            console.log(promedioP1,promedioP2)
+            var promedioFinal = (promedioP1 + promedioP2 )/2;
+            var recuperacion = formData.examenRecuperacion;
+            const aprobado = promedioFinal>=7;
+            var response: ResponseGrades;
+            if(aprobado){
+                response = {
+                    notaMin: 0,
+                    promedioActual: promedioFinal,
+                    aprobado: true
+                }
+                
+            }else{
+                var notaParcial = ((formData.ACBDB1 + formData.APEB1 +formData.ACBDB2+ formData.APEB2)/2)*0.4615;
+                var promedioFinalRecu = notaParcial + recuperacion;
+                var notamin = 7 - promedioFinalRecu;
+                response = {
+                    notaMin: notamin,
+                    promedioActual: recuperacion!=0? promedioFinalRecu:promedioFinal,
+                    aprobado: promedioFinalRecu>=7 
+                }
             }
             onChange(response);
-        }else{
-            var notaParcial = ((formData.ACBDB1 + formData.APEB1 +formData.ACBDB2+ formData.APEB2)/2)*0.4615;
-            var promedioFinalRecu = notaParcial + formData.examenRecuperacion;
-            var notamin = 7 - promedioFinalRecu;
-            response = {
-                notaMin: notamin,
-                promedioActual: promedioFinalRecu,
-                aprobado: promedioFinalRecu>=7 
-            }
+            // Aquí puedes manejar los datos del formulario como desees
         }
         
+        setValidated(true);
         
-        console.log(response);
-        onChange(response); // Aquí puedes manejar los datos del formulario como desees
     };
 
     return (
         <>
-            <Form onSubmit={handleSubmit}>
-                <Row className="mt-3">
+            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                <Row className="mt-1">
                     <Col className="justify-content-center">
                         <Form.Label className="fs-4">PRIMER BIMESTRE</Form.Label>
                     </Col>
@@ -74,6 +80,7 @@ function FormularioNotas({onChange}) {
                         <Form.Label>ACBDB1</Form.Label>
                         <FloatingLabel controlId="floatingInputGrid" label="Aprendizaje en contacto con el Docente (-/3.5)">
                             <Form.Control
+                                required
                                 type="number"
                                 name="ACBDB1"
                                 value={formData.ACBDB1}
@@ -87,6 +94,7 @@ function FormularioNotas({onChange}) {
                         <Form.Label>APEB1</Form.Label>
                         <FloatingLabel controlId="floatingInputGrid" label="Aprendizaje practico experimental (-/3)">
                             <Form.Control
+                                required
                                 type="number"
                                 name="APEB1"
                                 value={formData.APEB1}
@@ -100,6 +108,7 @@ function FormularioNotas({onChange}) {
                         <Form.Label>AAB01</Form.Label>
                         <FloatingLabel controlId="floatingInputGrid" label="Aprendizaje Autonomo (-/1)">
                             <Form.Control
+                                required
                                 type="number"
                                 name="AAB01"
                                 value={formData.AAB01}
@@ -113,6 +122,7 @@ function FormularioNotas({onChange}) {
                         <Form.Label>AAEPRB1</Form.Label>
                         <FloatingLabel controlId="floatingInputGrid" label="Examen Final (-/2.5)">
                             <Form.Control
+                                required
                                 type="number"
                                 name="AEPRB1"
                                 value={formData.AEPRB1}
@@ -132,8 +142,9 @@ function FormularioNotas({onChange}) {
                 <Row>
                     <Col className="col-xl-6 col-12">
                         <Form.Label>ACBDB2</Form.Label>
-                        <FloatingLabel controlId="floatingInputGrid" label="Aprendizaje en contacto con el Docente">
+                        <FloatingLabel controlId="floatingInputGrid" label="Aprendizaje en contacto con el Docente (-/3.5)">
                             <Form.Control
+                                required
                                 type="number"
                                 name="ACBDB2"
                                 value={formData.ACBDB2}
@@ -145,8 +156,9 @@ function FormularioNotas({onChange}) {
                     </Col>
                     <Col className="col-xl-6 col-12">
                         <Form.Label>APEB2</Form.Label>
-                        <FloatingLabel controlId="floatingInputGrid" label="Aprendizaje practico experimental">
+                        <FloatingLabel controlId="floatingInputGrid" label="Aprendizaje practico experimental (-/3)">
                             <Form.Control
+                                required
                                 type="number"
                                 name="APEB2"
                                 value={formData.APEB2}
@@ -156,10 +168,11 @@ function FormularioNotas({onChange}) {
                             />
                         </FloatingLabel>
                     </Col>
-                    <Col className="col-12">
+                    <Col className="col-xl-6 col-12">
                         <Form.Label>AAB02</Form.Label>
-                        <FloatingLabel controlId="floatingInputGrid" label="Aprendizaje Autonomo">
+                        <FloatingLabel controlId="floatingInputGrid" label="Aprendizaje Autonomo (-/1)">
                             <Form.Control
+                                required
                                 type="number"
                                 name="AAB02"
                                 value={formData.AAB02}
@@ -173,6 +186,7 @@ function FormularioNotas({onChange}) {
                         <Form.Label>AAEPRB2</Form.Label>
                         <FloatingLabel controlId="floatingInputGrid" label="Examen Final (-/2.5)">
                             <Form.Control
+                                required
                                 type="number"
                                 name="AEPRB2"
                                 value={formData.AEPRB2}
@@ -194,6 +208,7 @@ function FormularioNotas({onChange}) {
                         <Form.Label>Examen de Recuperacion</Form.Label>
                         <FloatingLabel controlId="floatingInputGrid" label="Nota de examen de recuperacion ">
                             <Form.Control
+                                required
                                 type="number"
                                 name="examenRecuperacion"
                                 value={formData.examenRecuperacion}
