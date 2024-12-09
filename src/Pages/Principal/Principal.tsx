@@ -16,8 +16,9 @@ function Principal() {
     const [isSubmitted, setIsSubmitted] = useState(false); // Nuevo estado para controlar envíos
 
     const handleFormSubmit = (results: ResponseGrades) => {
+        setIsSubmitted(true);
         setResponse(results);
-        setIsSubmitted(true); // Marca como enviado al recibir los resultados
+         // Marca como enviado al recibir los resultados
     };
 
     return (
