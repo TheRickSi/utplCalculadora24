@@ -42,8 +42,8 @@ function FormularioNotas({onChange}: FormularioNotasInterface) {
             var promedioP2 = formData.AAB02 + formData.ACBDB2 +formData.AEPRB2 + formData.APEB2;
             console.log(promedioP1,promedioP2)
             var promedioFinal = (promedioP1 + promedioP2 )/2;
-            var recuperacion = formData.examenRecuperacion;
-            const aprobado = promedioFinal>=7;
+            var recuperacion = formData.examenRecuperacion * 0.3;
+            const aprobado = promedioFinal>=6.5;
             var response: ResponseGrades;
             if(aprobado){
                 response = {
@@ -55,11 +55,11 @@ function FormularioNotas({onChange}: FormularioNotasInterface) {
             }else{
                 var notaParcial = ((formData.ACBDB1 + formData.APEB1 +formData.ACBDB2+ formData.APEB2)/2)*0.4615;
                 var promedioFinalRecu = notaParcial + recuperacion;
-                var notamin = 7 - promedioFinalRecu;
+                var notamin = 6.5 - promedioFinalRecu;
                 response = {
                     notaMin: notamin,
                     promedioActual: recuperacion!=0? promedioFinalRecu:promedioFinal,
-                    aprobado: promedioFinalRecu>=7 
+                    aprobado: promedioFinalRecu >= 6.5
                 }
             }
             onChange(response);

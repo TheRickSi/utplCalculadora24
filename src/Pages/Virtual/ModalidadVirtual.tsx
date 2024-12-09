@@ -6,7 +6,7 @@ import { ResponseGrades } from "../../Interfaces/ResponseGrades";
 import PresentacionResultados from "../../Components/Principal/PresentacionResultados";
 import { useMediaQuery } from "react-responsive";
 
-function Principal() {
+function ModalidadVirtual() {
     const isLessThanSm = useMediaQuery({ query: "(max-width: 575.98px)" });
     const [response, setResponse] = useState<ResponseGrades>({
         notaMin: 0,
@@ -23,7 +23,6 @@ function Principal() {
 
     return (
         <>
-            <NavBar />
             <Container className="fluid">
                 <Row className="align-items-center">
                     <Col className="col-md-7">
@@ -40,4 +39,4 @@ function Principal() {
     );
 }
 
-export default Principal;
+export default ModalidadVirtual;
