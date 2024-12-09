@@ -1,5 +1,4 @@
 import { Container, Row, Col } from "react-bootstrap";
-import NavBar from "../../Components/shared/NavBar";
 import FormularioNotas from "../../Components/Principal/FormularioNotas";
 import { useState } from "react";
 import { ResponseGrades } from "../../Interfaces/ResponseGrades";
