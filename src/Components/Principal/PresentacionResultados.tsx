@@ -11,7 +11,7 @@ interface PresentacionResultadosInterface{
 
 function PresentacionResultados({results, breakpoint}: PresentacionResultadosInterface)
 {
-    const [src,setSrc] = useState("./src/assets/question.webp");
+    const [src,setSrc] = useState("./public/assets/question.webp");
     const [message, setMessage] = useState("Ingresa tus datos para el calculo")
     const [modalShow, setModalShow] = useState(false);
     const isFirstRender = useRef(true);
@@ -35,11 +35,11 @@ function PresentacionResultados({results, breakpoint}: PresentacionResultadosInt
         }else{
             if (results.aprobado) {
                 setModalShow(true);
-                setSrc("./src/assets/approved.png");
+                setSrc("./public/assets/approved.png");
                 setMessage("¡Felicidades, estás aprobado!");
             } else {
                 setModalShow(true);
-                setSrc("./src/assets/sad.svg");
+                setSrc("./public/assets/sad.svg");
                 setMessage("¡Sigue intentándolo!");
             }
         }
